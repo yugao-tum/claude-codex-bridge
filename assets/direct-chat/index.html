@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude · 直聊</title>
+  <style>
+    :root{color-scheme:light;--bg:#f5f4f0;--paper:#fff;--ink:#202a2b;--muted:#697575;--line:#e0e4df;--accent:#226957;--accent-soft:#edf5ef;--danger:#a4372c;--warn:#926016;font:15px/1.6 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink)}button,input,textarea{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);padding:8px 14px;transition:background .15s}button:hover:enabled{background:#f0f3f0}button:disabled{opacity:.45;cursor:not-allowed}button.primary{background:var(--accent);border-color:var(--accent);color:#fff}button.primary:hover:enabled{background:#185643}button.danger{color:var(--danger)}button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #98c6b5;outline-offset:3px}[hidden]{display:none!important}
+    .app{height:100vh;height:100dvh;display:flex;flex-direction:column;max-width:1600px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 26px;border-bottom:1px solid var(--line);background:var(--bg)}.brand{display:flex;align-items:center;gap:12px}.mark{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:var(--accent);color:white;font:600 21px Georgia,serif}.brand h1{font-size:18px;letter-spacing:.02em;margin:0}.brand p{font-size:12px;color:var(--muted);margin:1px 0 0}.connection{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);white-space:nowrap}.dot{width:7px;height:7px;border-radius:50%;background:#b4bbb7}.dot.online{background:#398568}.dot.offline{background:#bb5f4c}.layout{display:grid;grid-template-columns:285px minmax(0,1fr);flex:1;min-height:0}.sidebar{padding:24px 20px;border-right:1px solid var(--line);overflow:auto}.sidebar h2{font-size:11px;letter-spacing:.12em;color:var(--muted);font-weight:600;margin:0 0 15px}.meta{margin:0}.meta dt{font-size:12px;color:var(--muted);margin-top:14px}.meta dd{margin:3px 0 0;font-size:13px;overflow-wrap:anywhere}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.workspace-box{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}summary{cursor:pointer;font-size:13px;font-weight:600}.workspace-box label{display:block;font-size:12px;margin:13px 0 6px;color:var(--muted)}input{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px}input:disabled{color:var(--muted);background:#eeefeb}.workspace-box button{margin-top:10px;width:100%;font-size:12px}.hint{color:var(--muted);font-size:12px;margin:9px 0 0}.activity-section{border-top:1px solid var(--line);margin-top:23px;padding-top:20px}.activity-section h2{margin-bottom:10px}.activity{list-style:none;margin:0;padding:0}.activity li{padding:10px 0;border-bottom:1px solid var(--line)}.activity-head{display:flex;gap:8px;justify-content:space-between;align-items:baseline;font-size:12px}.activity-name{font-weight:600;overflow-wrap:anywhere}.activity-status{font-size:11px;color:var(--muted);white-space:nowrap}.activity-summary{margin:5px 0 0;font-size:12px;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}.activity-empty{font-size:12px;color:var(--muted)}
+    .chat{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--paper)}.chat-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:19px 28px;border-bottom:1px solid var(--line)}.chat-header h2{font-size:14px;font-weight:600;margin:0}.chat-state{font-size:12px;color:var(--muted);margin-top:2px}.actions{display:flex;gap:8px}.actions button{font-size:12px;padding:6px 11px}.timeline{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:30px 28px;scrollbar-gutter:stable}.messages{width:100%;max-width:860px;margin:0 auto}.empty{max-width:500px;margin:10vh auto 0;text-align:center}.empty .eyebrow{font:italic 25px Georgia,serif;color:var(--accent);margin:0 0 14px}.empty h3{font-size:24px;font-weight:500;letter-spacing:.02em;margin:0 0 10px}.empty p{font-size:14px;color:var(--muted);margin:0}.message{margin:0 0 28px;min-width:0}.message.user{max-width:85%;margin-left:auto}.message-label{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:7px}.message.user .message-label{text-align:right}.message-text{white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;line-height:1.8}.user .message-text{background:var(--accent-soft);padding:13px 17px;border-radius:14px 14px 4px 14px}.message.system .message-text,.message.tool .message-text{font-size:13px;color:var(--muted);border-left:2px solid var(--line);padding-left:13px}.error{margin:0 28px 12px;padding:10px 13px;border:1px solid #eaccc7;border-radius:8px;background:#fff6f3;color:var(--danger);font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}.approval{border:1px solid #e4d2ae;border-radius:12px;background:#fffcf4;margin:0 28px 14px;padding:15px 17px;max-height:42vh;overflow:auto}.approval h3{font-size:14px;margin:0 0 5px;color:#73501e}.approval .cwd{font-size:12px;margin:0;color:var(--muted);overflow-wrap:anywhere}.approval pre{white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;background:#f4eee1;border-radius:7px;padding:12px;font-size:12px;line-height:1.65;margin:12px 0}.approval-footer{display:flex;align-items:center;justify-content:space-between;gap:12px}.approval-footer p{font-size:12px;margin:0;color:var(--warn)}.approval-buttons{display:flex;gap:8px;flex-shrink:0}.approval-buttons button{font-size:12px}.composer{border-top:1px solid var(--line);padding:17px 28px 14px}.input-shell{border:1px solid #cfd8d1;border-radius:12px;padding:11px 12px 10px;background:#fff}.input-shell:focus-within{border-color:#7dab98;box-shadow:0 0 0 2px #edf5ef}textarea{display:block;resize:vertical;width:100%;min-height:70px;max-height:240px;border:0;outline:none;padding:0;color:var(--ink);background:transparent;line-height:1.65}textarea:focus-visible{outline:none}.composer-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px}.composer-bottom span{font-size:11px;color:var(--muted)}.send{min-width:80px}.composer-note{font-size:11px;color:var(--muted);margin:8px 1px 0}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:800px){.topbar{padding:14px 17px}.brand p{display:none}.layout{grid-template-columns:220px minmax(0,1fr)}.sidebar{padding:20px 14px}.chat-header{padding:15px 18px}.timeline{padding:23px 18px}.composer{padding:13px 18px}.approval{margin:0 18px 12px}.error{margin:0 18px 10px}.approval-footer{align-items:flex-start;flex-direction:column}.empty h3{font-size:21px}}
+    @media(max-width:600px){.app{height:auto;min-height:100dvh}.layout{display:flex;flex-direction:column;min-height:calc(100dvh - 66px)}.sidebar{order:2;border-right:0;border-top:1px solid var(--line);overflow:visible;padding:19px}.sidebar h2{margin-bottom:9px}.meta{display:grid;grid-template-columns:75px minmax(0,1fr);gap:6px 12px}.meta dt,.meta dd{margin:0}.workspace-box{margin-top:15px;padding-top:14px}.activity-section{margin-top:15px;padding-top:14px}.chat{height:calc(100dvh - 66px);min-height:510px}.chat-header{padding:13px 16px}.timeline{padding:23px 16px}.composer{padding:12px 16px}.approval{margin:0 16px 10px;max-height:35vh}.error{margin:0 16px 10px}.composer-bottom span{max-width:190px}.composer-note{font-size:10px}.message.user{max-width:92%}.empty{margin-top:6vh}.actions{gap:5px}.actions button{padding:5px 8px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="mark" aria-hidden="true">C</span><div><h1>Claude · 直聊</h1><p>与你的 Claude 会话直接连接</p></div></div>
+    <div class="connection" role="status"><span class="dot" id="connection-dot" aria-hidden="true"></span><span id="connection-text">正在连接本机入口</span></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" aria-label="会话与工作目录">
+      <h2>当前会话</h2>
+      <dl class="meta">
+        <dt>型号标签</dt><dd id="model">等待连接</dd>
+        <dt>会话</dt><dd class="mono" id="session">—</dd>
+        <dt>工作目录</dt><dd class="mono" id="workspace-current">等待连接</dd>
+      </dl>
+      <p class="hint">显示服务返回的型号标签，未独立核实实际后端。</p>
+      <details class="workspace-box">
+        <summary>更换工作目录</summary>
+        <form id="workspace-form">
+          <label for="workspace-input">目录路径</label>
+          <input id="workspace-input" name="workspace" type="text" placeholder="已配置工作范围内的项目路径" autocomplete="off" spellcheck="false" disabled>
+          <button id="workspace-button" type="submit" disabled>使用此目录</button>
+        </form>
+        <p class="hint">默认使用配置中的独立目录。空闲时可选择已配置工作范围内的项目路径。</p>
+      </details>
+      <section class="activity-section" aria-labelledby="activity-heading">
+        <h2 id="activity-heading">工具动作</h2>
+        <p class="activity-empty" id="activity-empty">工具动作会显示在这里。</p>
+        <ol class="activity" id="activity"></ol>
+      </section>
+    </aside>
+    <main class="chat" aria-label="Claude 对话">
+      <header class="chat-header">
+        <div><h2>对话</h2><div class="chat-state" id="chat-state" role="status">正在读取会话状态…</div></div>
+        <div class="actions"><button type="button" id="recover">恢复状态</button><button type="button" class="danger" id="stop" disabled>停止</button></div>
+      </header>
+      <section class="timeline" id="timeline" aria-label="聊天记录" tabindex="0">
+        <div class="messages" id="messages"></div>
+        <div class="empty" id="empty"><p class="eyebrow">A space to think &amp; work.</p><h3>直接告诉 Claude，你想做什么</h3><p>消息原文、回复与工具动作会留在这个会话里。</p></div>
+      </section>
+      <div class="error" id="error" role="alert" hidden></div>
+      <section class="approval" id="approval" aria-labelledby="approval-title" hidden>
+        <h3 id="approval-title">Claude 请求运行命令</h3>
+        <p class="cwd">工作目录：<span class="mono" id="approval-cwd"></span></p>
+        <p class="cwd">命令执行时限：<span id="approval-timeout"></span></p>
+        <pre class="mono" id="approval-command"></pre>
+        <div class="approval-footer"><p>命令按你的 Windows 账户权限运行。<br>本次选择仅对这一条命令有效。</p><div class="approval-buttons"><button type="button" id="deny">拒绝</button><button type="button" class="primary" id="allow">允许一次</button></div></div>
+      </section>
+      <form class="composer" id="message-form">
+        <div class="input-shell">
+          <label class="sr-only" for="message-input">给 Claude 发消息</label>
+          <textarea id="message-input" rows="3" placeholder="给 Claude 发消息…" autocomplete="off"></textarea>
+          <div class="composer-bottom"><span id="composer-hint">Enter 发送 · Shift + Enter 换行</span><button type="submit" class="primary send" id="send" disabled>发送</button></div>
+        </div>
+        <p class="composer-note">Claude 可在选定目录写入文件；运行命令前会逐条询问你。</p>
+      </form>
+    </main>
+  </div>
+</div>
+<script>
+  'use strict';
+  const token = '__CSRF_TOKEN__';
+  const el = Object.fromEntries(Array.from(document.querySelectorAll('[id]'), node => [node.id, node]));
+  const idleStates = new Set(['idle', 'ready', 'completed', 'failed', 'stopped', 'cancelled', 'canceled']);
+  const labels = {idle:'空闲',ready:'可以开始对话',connecting:'正在连接 Claude',stopping:'正在停止',finishing:'正在收取最终结果',queued:'等待处理',started:'Claude 正在处理',running:'Claude 正在处理',busy:'Claude 正在处理',thinking:'Claude 正在思考',executing:'正在执行工具',awaiting_approval:'等待你的命令许可',waiting_approval:'等待你的命令许可',completed:'已完成',failed:'处理失败',stopped:'已停止',cancelled:'已取消',canceled:'已取消',unknown:'结果尚未确认',recovering:'正在恢复状态',pending:'等待处理',approved:'已允许',denied:'已拒绝',succeeded:'已完成'};
+  let state = null, connected = false, actionBusy = false, needsRecovery = false;
+  let workspaceDirty = false, stateRequest = null, localError = '', messagesKey = '', activityKey = '';
+  const stateLabel = value => labels[value] || String(value || '状态未知');
+  const isBusy = () => !!state && (!!state.approval || !idleStates.has(state.status));
+  const canSend = () => connected && !!state && !isBusy() && !actionBusy && !needsRecovery;
+
+  function syncControls() {
+    const idle = canSend();
+    el.send.disabled = !idle || !el['message-input'].value.trim();
+    el.send.textContent = actionBusy ? '请稍候' : '发送';
+    el.stop.disabled = !state || !isBusy() || actionBusy;
+    el.recover.disabled = actionBusy;
+    el['workspace-input'].disabled = !idle;
+    el['workspace-button'].disabled = !idle || !el['workspace-input'].value.trim();
+    el.allow.disabled = el.deny.disabled = actionBusy || !connected || !state?.approval;
+    el['connection-dot'].className = 'dot ' + (connected ? 'online' : 'offline');
+    el['connection-text'].textContent = connected ? '本机入口已连接' : '本机入口中断，正在重连';
+    el['chat-state'].textContent = !state ? '正在读取会话状态…' : needsRecovery ? '发送结果尚未确认，请恢复状态' : state.approval ? '等待你的命令许可' : stateLabel(state.status);
+    el['composer-hint'].textContent = needsRecovery ? '先恢复状态，输入内容已保留' : !connected ? '连接恢复后可发送，草稿会保留' : isBusy() ? '本轮处理中，可以先写下一条消息' : 'Enter 发送 · Shift + Enter 换行';
+    const error = localError || state?.error || '';
+    el.error.textContent = String(error);
+    el.error.hidden = !error;
+  }
+
+  function renderMessages(messages) {
+    const key = JSON.stringify(messages);
+    if (key === messagesKey) return;
+    messagesKey = key;
+    const nearBottom = el.timeline.scrollHeight - el.timeline.scrollTop - el.timeline.clientHeight < 96;
+    const previousTop = el.timeline.scrollTop;
+    const fragment = document.createDocumentFragment();
+    for (const message of messages) {
+      const role = message.role === 'user' ? 'user' : message.role === 'assistant' ? 'assistant' : message.role === 'tool' ? 'tool' : 'system';
+      const article = document.createElement('article');
+      article.className = 'message ' + role;
+      const label = document.createElement('div');
+      label.className = 'message-label';
+      label.textContent = {user:'你',assistant:'Claude',tool:'工具',system:'系统'}[role];
+      const body = document.createElement('div');
+      body.className = 'message-text';
+      body.textContent = String(message.text ?? '');
+      article.append(label, body);
+      fragment.append(article);
+    }
+    el.messages.replaceChildren(fragment);
+    el.empty.hidden = messages.length > 0;
+    if (nearBottom) requestAnimationFrame(() => { el.timeline.scrollTop = el.timeline.scrollHeight; });
+    else el.timeline.scrollTop = previousTop;
+  }
+
+  function renderActivity(activity) {
+    const key = JSON.stringify(activity);
+    if (key === activityKey) return;
+    activityKey = key;
+    const fragment = document.createDocumentFragment();
+    for (const action of activity) {
+      const item = document.createElement('li');
+      const head = document.createElement('div');
+      head.className = 'activity-head';
+      const name = document.createElement('span');
+      name.className = 'activity-name';
+      name.textContent = String(action.name || '工具');
+      const status = document.createElement('span');
+      status.className = 'activity-status';
+      status.textContent = stateLabel(action.status);
+      const summary = document.createElement('p');
+      summary.className = 'activity-summary';
+      summary.textContent = String(action.summary ?? '');
+      head.append(name, status);
+      item.append(head, summary);
+      fragment.append(item);
+    }
+    el.activity.replaceChildren(fragment);
+    el['activity-empty'].hidden = activity.length > 0;
+  }
+
+  function render() {
+    el.model.textContent = String(state.model || '未返回型号');
+    el.session.textContent = state.session_id ? String(state.session_id).slice(0, 12) : '尚未创建';
+    el.session.title = String(state.session_id || '');
+    el['workspace-current'].textContent = String(state.workspace || '未指定');
+    if (!workspaceDirty) el['workspace-input'].value = String(state.workspace || '');
+    renderMessages(Array.isArray(state.messages) ? state.messages : []);
+    renderActivity(Array.isArray(state.activity) ? state.activity : []);
+    el.approval.hidden = !state.approval;
+    if (state.approval) {
+      el['approval-cwd'].textContent = String(state.approval.cwd || '未指定');
+      el['approval-timeout'].textContent = state.approval.timeout_seconds == null ? '未提供' : String(state.approval.timeout_seconds) + ' 秒';
+      el['approval-command'].textContent = String(state.approval.command || '');
+    }
+    syncControls();
+  }
+
+  async function refreshState(fresh = false) {
+    if (stateRequest) { await stateRequest; if (!fresh) return; }
+    const request = (async () => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 10000);
+      try {
+        const response = await fetch('/api/state', {headers:{'X-Direct-Token':token},cache:'no-store',signal:controller.signal});
+        if (!response.ok) throw new Error('无法读取状态（' + response.status + '）');
+        const next = await response.json();
+        if (!next || typeof next.status !== 'string') throw new Error('状态响应不完整');
+        state = next;
+        connected = true;
+        render();
+      } catch (error) {
+        connected = false;
+        syncControls();
+      } finally { clearTimeout(timer); }
+    })();
+    stateRequest = request;
+    try { await request; } finally { if (stateRequest === request) stateRequest = null; }
+  }
+
+  async function post(path, body) {
+    let response, result;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
+    try {
+      response = await fetch(path, {method:'POST',headers:{'Content-Type':'application/json','X-Direct-Token':token},body:JSON.stringify(body),signal:controller.signal});
+      result = await response.json();
+    } catch (cause) {
+      const error = new Error('连接中断，操作结果尚未确认。请恢复状态后再继续。');
+      error.uncertain = true;
+      throw error;
+    } finally { clearTimeout(timer); }
+    if (!response.ok || !result.ok) throw new Error(result.error || '操作未完成（' + response.status + '）');
+    return result;
+  }
+
+  async function act(path, body, onSuccess) {
+    if (actionBusy) return;
+    actionBusy = true;
+    localError = '';
+    syncControls();
+    try {
+      await post(path, body);
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      localError = error.message;
+      if (error.uncertain) needsRecovery = true;
+    } finally {
+      await refreshState(true);
+      actionBusy = false;
+      syncControls();
+    }
+  }
+
+  el['message-form'].addEventListener('submit', event => {
+    event.preventDefault();
+    const text = el['message-input'].value;
+    if (!canSend() || !text.trim()) return;
+    act('/api/send', {text}, () => {
+      // Keep a draft the user edited while the submission was in flight.
+      if (el['message-input'].value === text) el['message-input'].value = '';
+    });
+  });
+  el['message-input'].addEventListener('input', syncControls);
+  el['message-input'].addEventListener('keydown', event => {
+    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
+      event.preventDefault();
+      if (canSend()) el['message-form'].requestSubmit();
+    }
+  });
+  el['workspace-input'].addEventListener('input', () => { workspaceDirty = true; syncControls(); });
+  el['workspace-form'].addEventListener('submit', event => {
+    event.preventDefault();
+    const path = el['workspace-input'].value.trim();
+    if (!canSend() || !path) return;
+    act('/api/workspace', {path}, () => { workspaceDirty = false; });
+  });
+  for (const [id, allow] of [['allow', true], ['deny', false]]) {
+    el[id].addEventListener('click', () => {
+      if (actionBusy || !connected || !state?.approval) return;
+      act('/api/approval', {id:state.approval.id,allow});
+    });
+  }
+  el.stop.addEventListener('click', () => { if (state && isBusy()) act('/api/stop', {}); });
+  el.recover.addEventListener('click', () => { act('/api/recover', {}, () => { needsRecovery = false; }); });
+  refreshState();
+  setInterval(() => { refreshState(); }, 1000);
+</script>
+</body>
+</html>

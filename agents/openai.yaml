@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claude 远端协作与直聊"
+  short_description: "连接云端 Claude，支持主管桥接、直接聊天、本机工具执行与对话恢复"
+  default_prompt: "使用 $claude-codex-bridge，按我的目标选择主管桥接或直接聊天模式，沿用已授权通道并保留可恢复的会话记录。"

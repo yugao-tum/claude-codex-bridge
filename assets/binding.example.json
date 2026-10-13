@@ -1,0 +1,108 @@
+{
+  "schema_note": "交接记录模板，不由程序自动读取。模式A历史55/900/128KiB参数仅为来源示例；模式B实际配置见assets/direct-chat/config.example.json。null表示未知；占位符需按本次授权替换，不能原样运行。",
+  "project_root": "<PROJECT>",
+  "source_codex_thread_id": null,
+  "transport": {
+    "kind": "ssh",
+    "ssh_executable": "ssh",
+    "ssh_config_path": null,
+    "host_alias": "bridge-host",
+    "host_key_policy": "strict-preverified",
+    "credential_reference": "仅填已授权密钥或代理的本地引用，不填密钥内容",
+    "container_entry_argv": [],
+    "remote_python": "python3",
+    "remote_bridge_path": null,
+    "remote_persistent_root": "<REMOTE_BRIDGE>",
+    "remote_workdir": null,
+    "claude_binary": null,
+    "remote_home": "<REMOTE_HOME>"
+  },
+  "implementation": {
+    "channel": null,
+    "local_source_path": null,
+    "local_source_sha256": null,
+    "deployed_source_sha256": null,
+    "observed_at": null,
+    "archive_coverage": null
+  },
+  "controller": {
+    "session_id": null,
+    "session_marker_path": null,
+    "transcript_path": null,
+    "writer_owner": null,
+    "model": null,
+    "effort": null,
+    "temporary_model_window": {
+      "authorization_reference": null,
+      "model": null,
+      "ends_at_with_timezone": null,
+      "restore_model": null,
+      "restore_observed_at": null
+    },
+    "builtin_tools": [],
+    "mcp_servers": {}
+  },
+  "request_policy": {
+    "network_wait_seconds": 55,
+    "task_timeout_seconds": 900,
+    "poll_interval_seconds": null,
+    "max_prompt_bytes": 131072,
+    "unknown_action": "recover-original-request-no-automatic-resend"
+  },
+  "local_state": {
+    "bridge_entry": null,
+    "pending_path": null,
+    "last_receipt_path": null,
+    "archive_root": null,
+    "worker_manifest": null
+  },
+  "active_work": {
+    "logical_task_id": null,
+    "request_id": null,
+    "attempt": null,
+    "part": null,
+    "controller_request_id": null,
+    "source_manifest": null,
+    "original_started_at": null,
+    "original_deadline_at": null,
+    "authorized_retry_scope": null,
+    "runtime_status_path": null,
+    "public_artifact_paths": []
+  },
+  "authorization": {
+    "approved_recipient": null,
+    "approved_material_scope": [],
+    "approved_execution_scope": [],
+    "excluded_material": [
+      "credentials",
+      "private_reasoning",
+      "sensitive_raw_logs",
+      "runtime_database"
+    ],
+    "paused_tasks": [],
+    "continuous_operation_authorized": false,
+    "formal_audit_required": false
+  },
+  "mode": null,
+  "direct_chat": {
+    "runtime_readme": "assets/direct-chat/README.md",
+    "config_template": "assets/direct-chat/config.example.json",
+    "config_path": null,
+    "independent_session": true,
+    "workspace_root": null,
+    "default_workspace": null,
+    "model": null,
+    "effort": null,
+    "port": null,
+    "timeout_seconds": null,
+    "tools": [
+      "read_file",
+      "write_file",
+      "list_files",
+      "run_command"
+    ],
+    "command_approval": "exact-command-cwd-timeout-once",
+    "command_is_os_sandbox": false,
+    "model_picker_in_ui": false
+  }
+}

@@ -1,0 +1,15 @@
+config.json
+runtime-config.json
+state/
+requests/
+sessions/
+sockets/
+workspace/
+deployment-backups/
+deployment-receipt.json
+__pycache__/
+*.pyc
+.test-app-*/
+.test-config-*/
+claude-tools-test-*/
+protocol-test-*/

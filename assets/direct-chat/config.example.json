@@ -1,0 +1,13 @@
+{
+  "workspace_root": "C:/Work",
+  "default_workspace": "C:/Work/claude-scratch",
+  "ssh_argv": ["ssh.exe", "-T", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "claude-host"],
+  "remote_prefix": ["python3"],
+  "remote_root": "/home/claude/claude-direct",
+  "remote_home": "/home/claude",
+  "remote_claude_binary": "/home/claude/.local/bin/claude",
+  "model": "REPLACE_WITH_EXACT_AVAILABLE_MODEL_ID",
+  "effort": "max",
+  "port": 8769,
+  "timeout_seconds": 900
+}
